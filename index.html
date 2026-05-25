@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kamaalツ | Anime, Streams & Music</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --crimson: #c41e3a;
+      --magenta: #d4447a;
+      --rose:    #ff82b2;
+      --dark:    #07040e;
+      --dark2:   #0f0819;
+      --glass:   rgba(255,255,255,0.035);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--dark);
+      color: #e8d5e5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 50%, rgba(196,30,58,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 15%, rgba(212,68,122,.14) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 55% 85%, rgba(155,29,62,.12) 0%, transparent 45%),
+        linear-gradient(145deg, #07040e 0%, #0f0819 55%, #090613 100%);
+    }
+
+    .particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+    .particle {
+      position: absolute; border-radius: 50%; opacity: 0;
+      animation: rise var(--d) var(--delay) infinite ease-out;
+    }
+
+    @keyframes rise {
+      0%   { transform: translateY(105vh) translateX(0) scale(0);   opacity: 0; }
+      8%   { opacity: .7; }
+      90%  { opacity: .08; }
+      100% { transform: translateY(-8vh) translateX(var(--dx)) scale(1.6); opacity: 0; }
+    }
+
+    .top-bar {
+      position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 999;
+      background: linear-gradient(90deg, transparent, var(--crimson) 25%, var(--magenta) 50%, var(--rose) 75%, transparent);
+      animation: shimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer { 0%,100% { opacity:.7; } 50% { opacity:1; } }
+
+    .container {
+      position: relative; z-index: 10;
+      max-width: 580px; margin: 0 auto;
+      padding: 72px 20px 80px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 28px;
+    }
+
+    .profile {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 18px; text-align: center;
+      animation: fade-in .8s ease both;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar-wrap { position: relative; width: 124px; height: 124px; }
+
+    .avatar-ring {
+      position: absolute; inset: -4px; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--crimson), var(--magenta), var(--rose), rgba(255,255,255,.4), var(--crimson));
+      animation: spin 5s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .avatar-bg {
+      position: absolute; inset: 3px; border-radius: 50%;
+      background: var(--dark2); overflow: hidden;
+    }
+
+    .avatar-bg img { width: 100%; height: 100%; object-fit: cover; }
+
+    .avatar-glow {
+      position: absolute; inset: 0; border-radius: 50%;
+      box-shadow: 0 0 40px 12px rgba(196,30,58,.35);
+      pointer-events: none;
+    }
+
+    .name {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--rose) 0%, #e86090 40%, var(--crimson) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; letter-spacing: .06em;
+    }
+
+    .tagline {
+      font-size: .78rem; font-weight: 400;
+      letter-spacing: .28em; text-transform: uppercase;
+      color: rgba(232,213,229,.42);
+    }
+
+    .bio {
+      font-size: .93rem; color: rgba(232,213,229,.65);
+      line-height: 1.75; max-width: 360px;
+    }
+
+    .divider {
+      width: 100%; display: flex; align-items: center; gap: 14px;
+      animation: fade-in .8s .2s ease both;
+    }
+
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,68,122,.35), transparent);
+    }
+
+    .divider span { font-size: .65rem; color: var(--magenta); letter-spacing: .25em; opacity: .65; }
+
+    .links-group {
+      width: 100%; display: flex; flex-direction: column; gap: 10px;
+      animation: fade-in .8s .3s ease both;
+    }
+
+    .section-label {
+      font-family: 'Cinzel', serif; font-size: .65rem;
+      letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(212,68,122,.55); margin-bottom: 4px;
+    }
+
+    .link-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px;
+      background: var(--glass);
+      border: 1px solid rgba(212,68,122,.16);
+      border-radius: 14px;
+      text-decoration: none; color: #e8d5e5;
+      font-weight: 500; font-size: .93rem;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: background .25s, border-color .25s, transform .25s;
+    }
+
+    .link-card::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--crimson), var(--magenta));
+      opacity: 0; transition: opacity .25s;
+    }
+
+    .link-card::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,130,178,.06) 50%, transparent 60%);
+      transform: translateX(-100%); transition: transform .5s;
+    }
+
+    .link-card:hover {
+      background: rgba(212,68,122,.08);
+      border-color: rgba(212,68,122,.4);
+      transform: translateX(5px);
+    }
+
+    .link-card:hover::before { opacity: 1; }
+    .link-card:hover::after  { transform: translateX(100%); }
+
+    .link-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; overflow: hidden;
+    }
+
+    .link-icon img { width: 24px; height: 24px; object-fit: contain; }
+
+    .link-text { flex: 1; }
+    .link-sub  { font-size: .73rem; color: rgba(232,213,229,.35); margin-top: 2px; font-weight: 400; }
+
+    .link-arrow {
+      color: rgba(212,68,122,.45); font-size: 1rem;
+      transition: transform .25s, color .25s;
+    }
+
+    .link-card:hover .link-arrow { color: var(--rose); transform: translateX(4px); }
+
+    .spotify-wrap { width: 100%; }
+
+    .playlists {
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 0; overflow: hidden;
+      transition: max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s;
+      opacity: 0;
+    }
+
+    .playlists.open { max-height: 260px; opacity: 1; margin-top: 8px; }
+
+    .playlist-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 16px 11px 58px;
+      background: rgba(30,215,96,.04);
+      border: 1px solid rgba(30,215,96,.12);
+      border-radius: 10px;
+      text-decoration: none; color: rgba(232,213,229,.75);
+      font-size: .85rem; font-weight: 500;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+
+    .playlist-card:hover {
+      background: rgba(30,215,96,.1);
+      border-color: rgba(30,215,96,.3);
+      color: #e8d5e5;
+    }
+
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #1ed760; flex-shrink: 0; }
+
+    footer {
+      position: relative; z-index: 10; text-align: center;
+      padding: 0 20px 44px; font-size: .72rem;
+      color: rgba(232,213,229,.2); letter-spacing: .06em;
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 64px 14px 70px; gap: 24px; }
+      .link-card  { padding: 13px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+<div class="bg"></div>
+<div class="particles" id="pts"></div>
+
+<div class="container">
+
+  <!-- Perfil -->
+  <div class="profile">
+    <div class="avatar-wrap">
+      <div class="avatar-ring"></div>
+      <div class="avatar-bg">
+        <img src="img/kamal3rdpictureprofileomg.png" alt="kamaal avatar">
+      </div>
+      <div class="avatar-glow"></div>
+    </div>
+    <div class="name">kamaalツ</div>
+    <div class="tagline">Anime &nbsp;·&nbsp; Streams &nbsp;·&nbsp; Music &nbsp;·&nbsp; Brawlhalla</div>
+    <p class="bio">
+      Hi! My name is Kamaal Muhammad and I will become the greatest Brawlhalla player in the world. :3
+    </p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Redes -->
+  <div class="links-group">
+    <div class="section-label">Social Media</div>
+
+    <!-- TikTok (ícono SVG incluido, no necesita imagen) -->
+    <a href="https://www.tiktok.com/@kamaal.kun" class="link-card" target="_blank" rel="noopener">
+      <div class="link-icon" style="background:rgba(255,255,255,.05);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z" fill="#e8d5e5"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        TikTok
+        <div class="link-sub">@kamaalx</div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <a href="https://www.youtube.com/@kamaaIy" class="link-card" target="_blank" rel="noopener">
+      <div class="link-icon" style="background:rgba(255,0,0,.08);">
+        <img src="img/Youtube icon.png" alt="YouTube">
+      </div>
+      <div class="link-text">
+        YouTube
+        <div class="link-sub">@kamaalx</div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <a href="https://www.twitch.tv/kamaaly" class="link-card" target="_blank" rel="noopener">
+      <div class="link-icon" style="background:rgba(145,70,255,.1);">
+        <img src="img/twitchicon.png" alt="Twitch">
+      </div>
+      <div class="link-text">
+        Twitch
+        <div class="link-sub">kamaaly</div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <a href="https://x.com/kamaalkun" class="link-card" target="_blank" rel="noopener">
+      <div class="link-icon" style="background:rgba(255,255,255,.05);">
+        <img src="img/twittericon.png" alt="X / Twitter" style="border-radius:4px;">
+      </div>
+      <div class="link-text">
+        X / Twitter
+        <div class="link-sub">@kamaalkun</div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <a href="https://discord.gg/dbnpkDcpcy" class="link-card" target="_blank" rel="noopener">
+      <div class="link-icon" style="background:rgba(88,101,242,.1);">
+        <img src="img/discordicon.png" alt="Discord">
+      </div>
+      <div class="link-text">
+        Discord
+        <div class="link-sub">kamaalx</div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Música -->
+  <div class="links-group">
+    <div class="section-label">Songs</div>
+
+    <div class="spotify-wrap">
+      <div class="link-card" onclick="toggleSpotify()" style="user-select:none;">
+        <div class="link-icon" style="background:rgba(30,215,96,.08);">
+          <img src="img/spotifyicon.png" alt="Spotify">
+        </div>
+        <div class="link-text">
+          Spotify
+          <div class="link-sub">My playlists</div>
+        </div>
+        <span class="link-arrow" id="sp-arrow">↓</span>
+      </div>
+
+      <div class="playlists" id="spList">
+        <a href="https://open.spotify.com/playlist/0MLqxiP80Gzh3oeXEDU6Dq?si=62cb1ddea4c34cf1" class="playlist-card" target="_blank" rel="noopener">
+          <span class="dot"></span> Lit
+        </a>
+        <a href="https://open.spotify.com/playlist/6wAaT6cyHf3U4LPlZ5k75P?si=aede1d8653004c8c" class="playlist-card" target="_blank" rel="noopener">
+          <span class="dot"></span> Video Game Music
+        </a>
+        <a href="https://open.spotify.com/playlist/1MiwpDHi4diMcQdLF2kV8J?si=a63ab60bb85a4a42" class="playlist-card" target="_blank" rel="noopener">
+          <span class="dot"></span> 日本語 音楽
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Gaming -->
+  <div class="links-group">
+    <div class="section-label">Gaming</div>
+
+    <div class="spotify-wrap">
+      <div class="link-card" onclick="toggleBrawl()" style="user-select:none;">
+        <div class="link-icon" style="background:rgba(196,30,58,.1);">
+          <img src="img/BRAWLICON.webp" alt="Brawlhalla">
+        </div>
+        <div class="link-text">
+          Brawlhalla Main
+          <div class="link-sub">All Time Peak Elo </div>
+        </div>
+        <span class="link-arrow" id="bw-arrow">↓</span>
+      </div>
+
+      <div class="playlists" id="bwInfo">
+        <div class="playlist-card" style="flex-direction:column; align-items:flex-start; gap:8px; padding:16px 20px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;"></span>
+            <img src="img/fait kamaal.png" alt="Fait" style="width:36px;height:36px;object-fit:contain;border-radius:6px;">
+            <span style="font-size:.95rem;font-weight:600;color:#e8d5e5;">Fait — 2700 Peak Elo</span>
+          </div>
+          <p style="font-size:.85rem;color:rgba(232,213,229,.7);line-height:1.65;margin:0;">
+            I main Fait because I think she is the coolest character in the game.
+            I love her and currently I am <strong style="color:var(--rose);">2700 peak elo</strong> with her! &gt;:D
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>© 2025 kamaalツ &nbsp;·&nbsp; Discord: kamaalx</footer>
+
+<script>
+  const pts = document.getElementById('pts');
+  const colors = ['#c41e3a','#d4447a','#ff82b2','#9b1d3e'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    const sz = 2 + Math.random() * 3.5;
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${sz}px; height:${sz}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      --d:${9 + Math.random()*14}s;
+      --delay:-${Math.random()*14}s;
+      --dx:${(Math.random()-.5)*120}px;
+    `;
+    pts.appendChild(el);
+  }
+
+  function toggleBrawl() {
+    const info  = document.getElementById('bwInfo');
+    const arrow = document.getElementById('bw-arrow');
+    const open  = info.classList.toggle('open');
+    arrow.textContent = open ? '↑' : '↓';
+  }
+
+  function toggleSpotify() {
+    const list  = document.getElementById('spList');
+    const arrow = document.getElementById('sp-arrow');
+    const open  = list.classList.toggle('open');
+    arrow.textContent = open ? '↑' : '↓';
+  }
+
+  document.querySelectorAll('.link-card').forEach((el, i) => {
+    el.style.animation = `fade-in .55s ${0.1 + i * 0.07}s ease both`;
+  });
+</script>
+
+</body>
+</html>
